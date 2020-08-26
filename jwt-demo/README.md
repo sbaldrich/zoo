@@ -66,3 +66,23 @@ Aw shucks, you got me
 ```
 
 5 - Optionally, repeat the same steps using the `username=user, password=user` credentials to see the request being forbidden for lack of privileges.
+
+### FAQ
+
+1 - Cool, how does it work?
+
+To get a grasp off the setup, I'd recommend starting by checking out the `SecurityConfiguration` class. 
+It basically secures all endpoints but the one used for authentication and sets up the filter
+that looks for a valid token in the security filter chain.
+Next, take a look at the `UserJWTController`, which handles the authentication requests using the credentials
+it receives. 
+Token generation and claim management are handled by the `TokenProvider`, which makes use of the [jjwt](https://github.com/jwtk/jjwt) project.
+Finally, the `ApplicationProperties` class contains all the mapped configuration from the `application.yml` file to control the behavior of the application.
+
+2 - What's that `http` command you showed before?
+
+It's [httpie](https://httpie.org/).
+
+3 - If the universe is so big, why won't it fight me?
+
+Calm down.
