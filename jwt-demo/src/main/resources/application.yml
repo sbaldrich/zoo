@@ -1,0 +1,13 @@
+
+application:
+  security:
+    authentication:
+      jwt:
+        # Keys used with HMAC-SHA algorithms MUST have a size >= 256 bits
+        # you can generate one using `openssl rand --base64 64`
+        base64-secret: YeMSWD/XdDTucEVGMaaJVWEYR7Mvz8KGY+dUqU+3M/9Itl4kgM0ldLIBaJ3wO8LjdOdynR0U9WddmNvBfVS/uA==
+        token-validity-in-seconds: 1800
+
+logging:
+  level:
+    com.bcorp.jwtdemo: DEBUG
