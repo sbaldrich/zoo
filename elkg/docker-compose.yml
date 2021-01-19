@@ -1,0 +1,56 @@
+version: "2.2"
+
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    container_name: es01
+    environment: 
+      - node.name=es01
+      - discovery.type=single-node # Bypass the bootstrap tests as we're not running in PROD
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks: 
+      - elk
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    container_name: kib01
+    ports:
+      - 5601:5601
+    environment: 
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    networks: 
+      - elk
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat-oss:7.9.3
+    networks: 
+      - elk
+    user: root
+    volumes:
+#      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+#      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "./log:/var/log/:ro"
+    environment:
+    - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-es01}
+    - KIBANA_HOST=${KIBANA_HOST:-kib01}
+    - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME:-elastic}
+    - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
+    command: ["--strict.perms=false"]
+    
+volumes: 
+  data01:
+    driver: local
+
+networks: 
+  elk:
+    driver: bridge

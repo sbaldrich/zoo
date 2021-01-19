@@ -1,0 +1,23 @@
+# Watch for docker events (see the volumes defined in docker-compose.yml)
+#filebeat.autodiscover:
+# providers:
+#   - type: docker
+#     hints.enabled: true
+
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/*.log
+  json:
+    keys_under_root: true
+    overwrite_keys: true
+    message_key: 'message'
+
+output.elasticsearch:
+  hosts: [es01:9200]
+
+processors:
+  - decode_json_fields:
+      fields: ['message']
+      target: json

@@ -1,0 +1,4 @@
+
+### GET a greeting
+GET http://{{host}}:{{port}}/
+
