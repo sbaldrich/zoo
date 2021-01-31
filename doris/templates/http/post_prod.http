@@ -1,0 +1,4 @@
+curl -s -H Content-Type:application/json -d \
+'{\"name\" : \"$PRODUCT_NAME\",\"owner\": \"$PRODUCT_OWNER\"}' \
+http://httpbin.org/post \ |
+jq '{url, json}'
